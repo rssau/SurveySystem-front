@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./layui/css/layui.css">
+    <title>问卷管理系统</title>
+</head>
+
+<body>
+    <div class="layui-layout layui-layout-admin">
+        <div id="header" class="layui-header">
+            <div class="layui-logo">问卷管理系统</div>
+            <!-- 头部区域（可配合layui已有的水平导航） -->
+            <ul class="layui-nav layui-layout-right">
+                <li class="layui-nav-item">
+                    <a href="javascript:;">
+                        <img src="http://t.cn/RCzsdCq" class="layui-nav-img">
+                        我
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="">基本资料</a></dd>
+                        <dd><a href="">安全设置</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item"><a href="">登出</a></li>
+            </ul>
+        </div>
+
+        <div class="layui-side layui-bg-black">
+            <div class="layui-side-scroll">
+                <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+                <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                    <button class="layui-btn" style="width: 80%; margin: 10px 10% 10px 10%;">创建问卷</button>
+                    <li class="layui-nav-item">
+                        <a class="" href="javascript:;">全部问卷</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="javascript:;">星标问卷</a>
+                    </li>
+                    <li class="layui-nav-item"><a href="javascript:;">文件夹</a></li>
+                    <li class="layui-nav-item"><a href="javascript:;">回收站</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="layui-body">
+            <!-- 内容主体区域 -->
+            <iframe id="contentFrame" src="http://www.baidu.com" style="width: 100%; border: none;"></iframe>
+        </div>
+
+        <div id="footer" class="layui-footer">
+            <!-- 底部固定区域 -->
+            © layui.com - 底部固定区域
+        </div>
+
+    </div>
+
+    <script src="../layui/layui.js"></script>
+    <script>
+        //注意：导航 依赖 element 模块，否则无法进行功能性操作
+        layui.use('element', function () {
+            var element = layui.element;
+
+            //…
+        });
+    </script>
+    <script>
+        window.onresize = function () {
+            var frame = document.getElementById("contentFrame");
+            var header = document.getElementById("header");
+            var footer = document.getElementById("footer");
+            frame.style.height = document.height - header.style.height - footer.style.height;
+            console.log(frame.style.height);
+        }
+    </script>
+</body>
+
+</html>
