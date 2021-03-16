@@ -33,17 +33,9 @@
             <div class="layui-side-scroll">
                 <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
                 <ul class="layui-nav layui-nav-tree" lay-filter="test">
-                    <button class="layui-btn" style="width: 80%; margin: 10px 10% 10px 10%;" onclick="window.location.href='./createsurvey.html'">
-                        <i class="layui-icon layui-icon-addition"></i>创建问卷
-                    </button>
-                    <li id="allSurveysItem" class="layui-nav-item" onclick="all_surveys()">
-                        <a class="" href="javascript:;">全部问卷</a>
+                    <li class="layui-nav-item" onclick="window.location.href='./mainpage.html'">
+                        <a class="" href="javascript:;"><i class="layui-icon layui-icon-return"></i>&nbsp;返回</a>
                     </li>
-                    <li class="layui-nav-item" onclick="marked_surveys()">
-                        <a href="javascript:;">星标问卷</a>
-                    </li>
-                    <li class="layui-nav-item" onclick="folders()"><a href="javascript:;">文件夹</a></li>
-                    <li class="layui-nav-item" onclick="recycle_bin()"><a href="javascript:;">回收站</a></li>
                 </ul>
             </div>
         </div>
@@ -72,32 +64,13 @@
     </script>
     <script>
         window.onload = function () {
-            $("#contentFrame").attr("height", window.innerHeight - $("#header").height() - $("#footer").height() - 4);
+            $("#contentFrame").attr("height", window.innerHeight - $("#header").height() - $("#footer").height());
             // frameHeight = window.innerHeight - headerHeight - footerHeight;
         }
 
         window.onresize = function () {
-            $("#contentFrame").attr("height", window.innerHeight - $("#header").height() - $("#footer").height() - 4);
+            $("#contentFrame").attr("height", window.innerHeight - $("#header").height() - $("#footer").height());
             // frameHeight = window.innerHeight - headerHeight - footerHeight;
-        }
-
-        function all_surveys() {
-            $("#contentFrame").attr("src", "./surveylist.html");
-        }
-        
-        function marked_surveys() {
-            $("#contentFrame").attr("src", "./viewsurvey.html");
-            
-        }
-        
-        function folders() {
-            $("#contentFrame").attr("src", "");
-            
-        }
-        
-        function recycle_bin() {
-            $("#contentFrame").attr("src", "");
-
         }
     </script>
 </body>

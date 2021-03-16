@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./layui/css/layui.css">
+  <title>Document</title>
+</head>
+
+<body>
+  <script id="demo" type="text/html">
+      <h2 style="text-align: center; margin-top: 20px">{{ d.title }}</h2>
+      <form class="layui-form" action="" style="margin-top: 20px; margin-right: 50px; margin-left: -60px">
+      <ul>
+      {{#  var count = 1; }}
+      {{#  layui.each(d.qlist, function(index, qitem){ }}
+      <li>
+          <p style="padding-left: 110px;">{{ count }}.&nbsp;{{ qitem.qcontent }}</span>
+          <br>
+          <br>
+          {{#  var verifyType = (qitem.nullable === 0)? "otherReq":"noReq";  }}
+          {{#  if (qitem.type === 0) {  }}
+          <div class="layui-form-item">
+            <div class="layui-input-block">
+              {{#  layui.each(qitem.qoptions, function(index, qoptionitem){ }}
+                {{#  if (qoptionitem.type === 0) {    }}
+                <input type="radio" name="option_{{ count }}" lay-verify="{{ verifyType }}" value="{{ qoptionitem.ocontent }}" title="{{ qoptionitem.ocontent }}">
+                {{#  } else if (qoptionitem.type === 1) { }}
+                <div class="other-option-box">
+                  <input class="otheroption" type="radio" name="option_{{ count }}" lay-verify="{{ verifyType }}" value="{{ qoptionitem.ocontent }}" title="{{ qoptionitem.ocontent }}">
+                  <input class="layui-input" type="text" name="othertext_{{ count }}" placeholder="请输入文字" autocomplete="off">
+                </div>
+                {{#  }  }}
+              {{#  }); }}
+            </div>
+          </div>
+          {{#  } else if (qitem.type === 1) {    }}
+          <div class="layui-form-item">
+            <div class="layui-input-block">
+                {{#  layui.each(qitem.qoptions, function(index, qoptionitem){ }}
+                  {{#  if (qoptionitem.type === 0) {    }}
+                  <input type="checkbox" name="muloption_{{ count }}" lay-skin="primary" lay-verify="{{ verifyType }}" value="{{ qoptionitem.ocontent }}" title="{{ qoptionitem.ocontent }}">
+                  {{#  } else if (qoptionitem.type === 1) { }}
+                  <div class="other-option-box">
+                    <input lay-filter="otheroption" type="checkbox" name="muloption_{{ count }}" lay-skin="primary" lay-verify="{{ verifyType }}" value="{{ qoptionitem.ocontent }}" title="{{ qoptionitem.ocontent }}">
+                    <input class="layui-input" type="text" name="othertext_{{ count }}" placeholder="请输入文字" autocomplete="off" style="margin-top: 5px;">
+                  </div>
+                  {{#  }  }}
+                {{#  }); }}
+            </div>
+          </div>
+          {{#  } else if (qitem.type === 2) {    }}
+          {{#  verifyType = (qitem.nullable === 0)? "required":"noReq";  }}
+          <div class="layui-form-item">
+            <div class="layui-input-block">
+                <input class="layui-input" type="text" name="title" required lay-verify="required" placeholder="请输入文字" autocomplete="off">
+            </div>
+          </div>
+          {{#  }     }}
+        </li>
+        <br>
+        <br>
+      {{#  count += 1;   }}
+      {{#  }); }}
+      {{#  if(d.qlist.count === 0){ }}
+        无数据
+      {{#  } }} 
+      <div class="layui-form-item">
+        <div class="layui-input-block">
+          <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+          <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+      </div>
+    </ul>
+      </form>
+    </script>
+
+  <div id="view"></div>
+
+  <script src="./jquery-3.6.0.min.js"></script>
+  <script src="./layui/layui.js"></script>
+  <script>
+    layui.use('form', function () {
+      var form = layui.form;
+
+      form.on('radio', function (data) {
+        var $ = layui.$;
+        var item = data.elem;
+        if ($(item).attr('class') == 'otheroption') {
+          var text = $(item).parents('.other-option-box').find('input[type="text"]');
+          text.attr('lay-verify', 'required')
+        } else {
+          var text = $(item).parents('.layui-input-block').find('input[type="text"]');
+          text.attr('lay-verify', 'noReq');
+        }
+      });
+
+      form.on('checkbox(otheroption)', function (data) {
+        var $ = layui.$;
+        item = data.elem;
+        if (item.checked) {
+          var text = $(item).parents('.other-option-box').find('input[type="text"]');
+          text.attr('lay-verify', 'required')
+        } else {
+          var text = $(item).parents('.other-option-box').find('input[type="text"]');
+          text.attr('lay-verify', 'noReq');
+        }
+      });
+
+      //自定义验证规则
+      form.verify({
+        otherReq: function (value, item) {
+          var $ = layui.$;
+          var verifyName = $(item).attr('name')
+            , verifyType = $(item).attr('type')
+            , formElem = $(item).parents('.layui-form')//获取当前所在的form元素，如果存在的话
+            , verifyElem = formElem.find('input[name=' + verifyName + ']')//获取需要校验的元素
+            , isTrue = verifyElem.is(':checked')//是否命中校验
+            , focusElem = verifyElem.next().find('i.layui-icon');//焦点元素
+
+          if (!isTrue || !value) {
+            //定位焦点
+            focusElem.css(verifyType == 'radio' ? { "color": "#FF5722" } : { "border-color": "#FF5722" });
+            //对非输入框设置焦点
+            focusElem.first().attr("tabIndex", "1").css("outline", "0").blur(function () {
+              focusElem.css(verifyType == 'radio' ? { "color": "" } : { "border-color": "" });
+            }).focus();
+            return '必填项不能为空';
+          }
+        },
+        noReq: function (value, item) {
+
+        }
+      });
+    });
+    layui.use('laytpl', function () {
+      var laytpl = layui.laytpl;
+      var data = { //数据
+        "title": "调查问卷名"
+        , "author": { "a_id": 12345, "a_nickname": "rssau" }
+        , "qlist": [
+          {
+            "qcontent": "你是GG还是MM？"
+            , "type": 0
+            , "nullable": 0
+            , "qoptions": [{ "type": 0, "ocontent": "GG" }, { "type": 0, "ocontent": "MM" }, { "type": 1, "ocontent": "其他" }]
+          }
+          , {
+            "qcontent": "你是GG还是MM？"
+            , "type": 0
+            , "nullable": 0
+            , "qoptions": [{ "type": 0, "ocontent": "GG" }, { "type": 0, "ocontent": "MM" }, { "type": 1, "ocontent": "其他" }]
+          }
+          , {
+            "qcontent": "你是GG还是MM？"
+            , "type": 1
+            , "nullable": 0
+            , "qoptions": [{ "type": 0, "ocontent": "GG" }, { "type": 0, "ocontent": "MM" }, { "type": 1, "ocontent": "其他1" }, { "type": 1, "ocontent": "其他2" }]
+          }
+          , {
+            "qcontent": "你是GG还是MM？"
+            , "type": 2
+            , "nullable": 0
+            , "qoptions": []
+          }
+        ]
+      }
+      var getTpl = demo.innerHTML
+        , view = document.getElementById('view');
+      laytpl(getTpl).render(data, function (html) {
+        view.innerHTML = html;
+      });
+    });
+  </script>
+
+</body>
+
+</html>
