@@ -82,6 +82,19 @@
             // frameHeight = window.innerHeight - headerHeight - footerHeight;
         }
 
+        var formdata = { //数据
+            "title": "未命名问卷"
+            , "author": { "a_id": 12345, "a_nickname": "rssau" }
+            , "qlist": [
+                {
+                    "qcontent": ""
+                    , "type": 0
+                    , "nullable": 0
+                    , "qoptions": [{ "type": 0, "ocontent": "" }, { "type": 0, "ocontent": "" }]
+                }
+            ]
+        }
+
         function preview_survey() {
             $("#contentFrame").attr("src", "./viewsurvey.html?action=view");
         }

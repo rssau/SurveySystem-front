@@ -17,8 +17,14 @@
       {{#  var count = 1; }}
       {{#  layui.each(d.qlist, function(index, qitem){ }}
       <li>
-          <p style="padding-left: 110px;">{{ count }}.&nbsp;{{ qitem.qcontent }}</span>
-          <br>
+          <p style="padding-left: 110px;">
+            {{ count }}.&nbsp;{{ qitem.qcontent }}
+            {{#    if (qitem.nullable == 1) { }}
+            <span style="color: grey;">
+              [选答]
+            </span>
+            {{#    }  }}
+          </p>
           <br>
           {{#  var verifyType = (qitem.nullable === 0)? "otherReq":"noReq";  }}
           {{#  if (qitem.type === 0) {  }}
@@ -83,9 +89,44 @@
   <script src="./layui/layui.js"></script>
   <script src="./app.js"></script>
   <script>
+    var data = null;
     window.onload = function () {
+      data = parent.formdata;
+      if (data == null) {
+        data = { //数据
+          "title": "调查问卷名"
+          , "author": { "a_id": 12345, "a_nickname": "rssau" }
+          , "qlist": [
+            {
+              "qcontent": "你是GG还是MM？"
+              , "type": 0
+              , "nullable": 0
+              , "qoptions": [{ "type": 0, "ocontent": "GG" }, { "type": 0, "ocontent": "MM" }, { "type": 1, "ocontent": "其他" }]
+            }
+            , {
+              "qcontent": "你是GG还是MM？"
+              , "type": 0
+              , "nullable": 0
+              , "qoptions": [{ "type": 0, "ocontent": "GG" }, { "type": 0, "ocontent": "MM" }, { "type": 1, "ocontent": "其他" }]
+            }
+            , {
+              "qcontent": "你是GG还是MM？"
+              , "type": 1
+              , "nullable": 0
+              , "qoptions": [{ "type": 0, "ocontent": "GG" }, { "type": 0, "ocontent": "MM" }, { "type": 1, "ocontent": "其他1" }, { "type": 1, "ocontent": "其他2" }]
+            }
+            , {
+              "qcontent": "你是GG还是MM？"
+              , "type": 2
+              , "nullable": 0
+              , "qoptions": []
+            }
+          ]
+        }
+      }
       var url = window.location.href;
       var action = url.getValue('action');
+      rerender();
       if (action != null && action == "view") {
         var form = layui.form;
         form.on('submit', function (data) {
@@ -154,36 +195,6 @@
     });
     layui.use('laytpl', function () {
       var laytpl = layui.laytpl;
-      var data = { //数据
-        "title": "调查问卷名"
-        , "author": { "a_id": 12345, "a_nickname": "rssau" }
-        , "qlist": [
-          {
-            "qcontent": "你是GG还是MM？"
-            , "type": 0
-            , "nullable": 0
-            , "qoptions": [{ "type": 0, "ocontent": "GG" }, { "type": 0, "ocontent": "MM" }, { "type": 1, "ocontent": "其他" }]
-          }
-          , {
-            "qcontent": "你是GG还是MM？"
-            , "type": 0
-            , "nullable": 0
-            , "qoptions": [{ "type": 0, "ocontent": "GG" }, { "type": 0, "ocontent": "MM" }, { "type": 1, "ocontent": "其他" }]
-          }
-          , {
-            "qcontent": "你是GG还是MM？"
-            , "type": 1
-            , "nullable": 0
-            , "qoptions": [{ "type": 0, "ocontent": "GG" }, { "type": 0, "ocontent": "MM" }, { "type": 1, "ocontent": "其他1" }, { "type": 1, "ocontent": "其他2" }]
-          }
-          , {
-            "qcontent": "你是GG还是MM？"
-            , "type": 2
-            , "nullable": 0
-            , "qoptions": []
-          }
-        ]
-      }
       var getTpl = demo.innerHTML
         , view = document.getElementById('view');
       laytpl(getTpl).render(data, function (html) {
@@ -194,6 +205,17 @@
       var layer = layui.layer;
 
     });
+
+    function rerender() {
+            var laytpl = layui.laytpl;
+            var getTpl = demo.innerHTML
+                , view = document.getElementById('view');
+            laytpl(getTpl).render(data, function (html) {
+                view.innerHTML = html;
+            });
+            var form = layui.form;
+            form.render();
+        }
   </script>
 
 </body>

@@ -11,14 +11,16 @@
 
 <body style="background-color:#F0F0F0;">
     <script id="demo" type="text/html">
-        <input class="layui-input" type="text" name="title" placeholder="请输入文字" value="{{ d.title }}" autocomplete="off" style="margin: 0 auto; max-width: 500px; margin-top: 20px; height: 60px; font-size: 200%;">
+        <input class="layui-input" type="text" name="title" placeholder="请输入文字" value="{{ d.title }}" autocomplete="off" 
+            onchange="update_text('title', value)"
+            style="margin: 0 auto; max-width: 500px; margin-top: 20px; height: 60px; font-size: 200%;">
         <form class="layui-form" action="" style="margin-top: 20px; margin-right: 50px; margin-left: 50px">
         <ul>
-            {{#  var count = 1; }}
+            {{#  var count = 0; }}
             {{#  layui.each(d.qlist, function(index, qitem){ }}
             <li>
                 <div class="layui-card">
-                    <div class="layui-card-header">问题{{ count }}</div>
+                    <div class="layui-card-header">问题{{ count + 1 }}</div>
                     <div class="layui-card-body">
                         <div class="layui-form-item">
                             <label class="layui-form-label">问题类型</label>
@@ -41,26 +43,56 @@
                             </div>
                         </div>
                         <div class="layui-form-item">
+                            <label class="layui-form-label">是否选答</label>
+                            <div class="layui-input-block">
+                                {{#   if (qitem.nullable == 1) {  }}
+                                <input type="checkbox" checked lay-filter="nullable" lay-skin="primary" name="optiontype_{{ count }}_{{ optioncount }}" qid="{{ count }}">
+                                {{#   } else {  }}
+                                <input type="checkbox" lay-filter="nullable" lay-skin="primary" name="optiontype_{{ count }}_{{ optioncount }}" qid="{{ count }}" oid="{{ optioncount }}">
+                                {{#   }       }}
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
                             <label class="layui-form-label">问题内容</label>
                             <div class="layui-input-block">
-                                <input class="layui-input" type="text" name="qcontent_{{ count }}" placeholder="请输入文字" value:{{ qitem.qcontent }} autocomplete="off">
+                                <input class="layui-input" type="text" name="qcontent_{{ count }}" placeholder="请输入文字" value="{{ qitem.qcontent }}" autocomplete="off"
+                                    onchange="update_textq({{ count }}, 'qcontent', value)">
                             </div>
                         </div>
                         {{# if (qitem.type != 2) { }}
                         <div class="layui-form-item" id="optionbox_{{ count }}">
-                            {{#  var optioncount = 1; }}
+                            {{#  var optioncount = 0; }}
                             {{#  layui.each(qitem.qoptions, function(index, qoptionitem){ }}
                             <div class="layui-form-item">
                                 <div class="layui-inline">
-                                    <label class="layui-form-label">选项{{ optioncount }}</label>
+                                    <label class="layui-form-label">选项{{ optioncount+1 }}</label>
                                     <div class="layui-input-inline" style="width: 300px;">
-                                        <input class="layui-input" type="text" name="option_{{ count }}_{{ optioncount }}" style="width: 100%;">
+                                        <input class="layui-input" type="text" name="option_{{ count }}_{{ optioncount }}" placeholder="请输入文字" value="{{ qoptionitem.ocontent }}"
+                                            onchange="update_textqo({{ count }}, {{ optioncount }}, 'ocontent', value)" style="width: 100%;">
                                     </div>
                                 </div>
                                 <div class="layui-inline">
-                                    <label class="layui-form-label">自填</label>
+                                    <label class="layui-form-label">受访者填写</label>
+                                    <div class="layui-input-inline" style="width: 80px;">
+                                        {{#   if (qoptionitem.type == 1) {  }}
+                                        <input type="checkbox" checked lay-filter="optiontype" lay-skin="primary" name="optiontype_{{ count }}_{{ optioncount }}" qid="{{ count }}" oid="{{ optioncount }}">
+                                        {{#   } else {  }}
+                                        <input type="checkbox" lay-filter="optiontype" lay-skin="primary" name="optiontype_{{ count }}_{{ optioncount }}" qid="{{ count }}" oid="{{ optioncount }}">
+                                        {{#   }       }}
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
                                     <div class="layui-input-inline" style="width: 100px;">
-                                        <input type="checkbox" lay-skin="primary" name="optiontype_{{ count }}_{{ optioncount }}">
+                                        <div class="layui-btn-group">
+                                            <button type="button" onclick="insert_option({{ count }}, {{ optioncount+1 }})" class="layui-btn layui-btn-primary layui-btn-sm">
+                                                <i class="layui-icon">&#xe654;</i>
+                                            </button>
+                                            {{#    if (qitem.qoptions.length >　1) {   }}
+                                            <button type="button" onclick="del_option({{ count }}, {{ optioncount }})" class="layui-btn layui-btn-primary layui-btn-sm">
+                                                <i class="layui-icon">&#xe640;</i>
+                                            </button>
+                                            {{#    }    }}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -70,11 +102,11 @@
                     </div>
                 </div>
                 <div class="layui-btn-group">
-                    <button type="button" id="btn_add_question_{{ count }}" onclick="insert_survey({{# count-1 }})" class="layui-btn layui-btn-sm">
+                    <button type="button" id="btn_add_question_{{ count }}" onclick="insert_question({{ count+1 }})" class="layui-btn layui-btn-sm">
                       <i class="layui-icon">&#xe654;</i>
                     </button>
-                    {{# if (count > 1) { }}
-                    <button type="button" id="btn_del_question_{{ count }}" class="layui-btn layui-btn-sm">
+                    {{# if (d.qlist.length > 1) { }}
+                    <button type="button" id="btn_del_question_{{ count }}" onclick="del_question({{ count }})" class="layui-btn layui-btn-sm">
                       <i class="layui-icon">&#xe640;</i>
                     </button>
                     {{# }    }}
@@ -97,47 +129,77 @@
     <script src="./layui/layui.js"></script>
     <script src="./app.js"></script>
     <script>
+        var formdata = null;
         window.onload = function () {
+            formdata = parent.formdata;
+            if (formdata == null) {
+                formdata = { //数据
+                    "title": "未命名问卷"
+                    , "author": { "a_id": 12345, "a_nickname": "rssau" }
+                    , "qlist": [
+                        {
+                            "qcontent": ""
+                            , "type": 0
+                            , "nullable": 0
+                            , "qoptions": [{ "type": 0, "ocontent": "" }, { "type": 0, "ocontent": "" }]
+                        }
+                    ]
+                }
+            }
             formdata.author.a_id = window.location.href.getValue('a_id');
             formdata.author.a_nickname = window.location.href.getValue('a_nickname');
             $("#qtype_1").val('1');
+            rerender();
         }
-        var formdata = { //数据
-            "title": "未命名问卷"
-            , "author": { "a_id": 12345, "a_nickname": "rssau" }
-            , "qlist": [
-                {
-                    "qcontent": "问题"
-                    , "type": 0
-                    , "nullable": 0
-                    , "qoptions": [{ "type": 0, "ocontent": "答案1" }, { "type": 0, "ocontent": "答案2" }, { "type": 0, "ocontent": "答案3" }]
-                }
-            ]
 
-        }
         layui.use('element', function () {
             var element = layui.element;
         });
         layui.use('form', function () {
             var form = layui.form;
 
+            form.on('checkbox(optiontype)', function (data) {
+                var item = data.elem
+                    , checked = item.checked
+                    , qid = $(item).attr('qid')
+                    , oid = $(item).attr('oid');
+                if (checked == true) {
+                    formdata.qlist[qid].qoptions[oid].type = 1;
+                } else {
+                    formdata.qlist[qid].qoptions[oid].type = 0;
+                }
+            });
+
+            form.on('checkbox(nullable)', function (data) {
+                var item = data.elem
+                    , checked = item.checked
+                    , qid = $(item).attr('qid');
+
+                if (checked == true) {
+                    formdata.qlist[qid].nullable = 1;
+                } else {
+                    formdata.qlist[qid].nullable = 0;
+                }
+
+            });
+
             form.on("select(qtype)", function (data) {
                 var item = data.elem
-                , value = Number(data.value);
+                    , value = Number(data.value);
 
                 var qid = $(item).attr("name").substr(-1, 1);
                 var parent = $(item).parents(".layui-card");
                 switch (value) {
                     case 0:
-                        formdata.qlist[qid-1].type = value;
+                        formdata.qlist[qid].type = value;
                         rerender();
                         break;
                     case 1:
-                        formdata.qlist[qid-1].type = value;
+                        formdata.qlist[qid].type = value;
                         rerender();
                         break;
                     case 2:
-                        formdata.qlist[qid-1].type = value;
+                        formdata.qlist[qid].type = value;
                         rerender();
                         break;
                     default:
@@ -154,17 +216,48 @@
             });
         });
 
-        function insert_survey(pos) {
-            formdata.qlist.splice(pos, 0
-            , {
-                "qcontent": "问题"
-                , "type": 0
-                , "nullable": 0
-                , "qoptions": [{ "type": 0, "ocontent": "答案1" }, { "type": 0, "ocontent": "答案2" }, { "type": 0, "ocontent": "答案3" }]
-            });
+        function insert_option(qid, pos) {
+            formdata.qlist[qid].qoptions.splice(pos, 0
+                , {
+                    "type": 0, "ocontent": ""
+                });
+            rerender();
         }
 
-        function rerender () {
+        function del_option(qid, pos) {
+            formdata.qlist[qid].qoptions.splice(pos, 1);
+            rerender();
+        }
+
+        function insert_question(pos) {
+            formdata.qlist.splice(pos, 0
+                , {
+                    "qcontent": ""
+                    , "type": 0
+                    , "nullable": 0
+                    , "qoptions": [{ "type": 0, "ocontent": "" }, { "type": 0, "ocontent": "" }]
+                });
+            rerender();
+        }
+
+        function del_question(pos) {
+            formdata.qlist.splice(pos, 1);
+            rerender();
+        }
+
+        function update_text(destname, str) {
+            formdata[destname] = str;
+        }
+
+        function update_textq(qid, destname, str) {
+            formdata.qlist[qid][destname] = str;
+        }
+
+        function update_textqo(qid, oid, destname, str) {
+            formdata.qlist[qid].qoptions[oid][destname] = str;
+        }
+
+        function rerender() {
             var laytpl = layui.laytpl;
             var getTpl = demo.innerHTML
                 , view = document.getElementById('view');
