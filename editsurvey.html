@@ -24,9 +24,19 @@
                             <label class="layui-form-label">问题类型</label>
                             <div class="layui-input-block">
                               <select lay-filter="qtype" name="qtype_{{ count }}">
-                                <option value="0">单选题</option>
-                                <option value="1">多选题</option>
-                                <option value="2">填空题</option>
+                                {{# if (qitem.type == 0) { }}
+                                        <option value="0" selected>单选题</option>
+                                        <option value="1">多选题</option>
+                                        <option value="2">填空题</option>
+                                {{# } else if (qitem.type == 1) { }}
+                                        <option value="0">单选题</option>
+                                        <option value="1" selected>多选题</option>
+                                        <option value="2">填空题</option>
+                                {{# } else if (qitem.type == 2) { }}
+                                        <option value="0">单选题</option>
+                                        <option value="1">多选题</option>
+                                        <option value="2" selected>填空题</option>
+                                {{# }  }}
                               </select>
                             </div>
                         </div>
@@ -36,6 +46,7 @@
                                 <input class="layui-input" type="text" name="qcontent_{{ count }}" placeholder="请输入文字" value:{{ qitem.qcontent }} autocomplete="off">
                             </div>
                         </div>
+                        {{# if (qitem.type != 2) { }}
                         <div class="layui-form-item" id="optionbox_{{ count }}">
                             {{#  var optioncount = 1; }}
                             {{#  layui.each(qitem.qoptions, function(index, qoptionitem){ }}
@@ -55,7 +66,18 @@
                             </div>
                             {{#  optioncount += 1; }); }}
                         </div>
+                        {{# }        }}
                     </div>
+                </div>
+                <div class="layui-btn-group">
+                    <button type="button" id="btn_add_question_{{ count }}" onclick="insert_survey({{# count-1 }})" class="layui-btn layui-btn-sm">
+                      <i class="layui-icon">&#xe654;</i>
+                    </button>
+                    {{# if (count > 1) { }}
+                    <button type="button" id="btn_del_question_{{ count }}" class="layui-btn layui-btn-sm">
+                      <i class="layui-icon">&#xe640;</i>
+                    </button>
+                    {{# }    }}
                 </div>
             </li>
             <br>
@@ -85,7 +107,7 @@
             , "author": { "a_id": 12345, "a_nickname": "rssau" }
             , "qlist": [
                 {
-                    "qcontent": "问题一"
+                    "qcontent": "问题"
                     , "type": 0
                     , "nullable": 0
                     , "qoptions": [{ "type": 0, "ocontent": "答案1" }, { "type": 0, "ocontent": "答案2" }, { "type": 0, "ocontent": "答案3" }]
@@ -131,6 +153,16 @@
                 view.innerHTML = html;
             });
         });
+
+        function insert_survey(pos) {
+            formdata.qlist.splice(pos, 0
+            , {
+                "qcontent": "问题"
+                , "type": 0
+                , "nullable": 0
+                , "qoptions": [{ "type": 0, "ocontent": "答案1" }, { "type": 0, "ocontent": "答案2" }, { "type": 0, "ocontent": "答案3" }]
+            });
+        }
 
         function rerender () {
             var laytpl = layui.laytpl;
