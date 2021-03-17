@@ -36,13 +36,22 @@
                     <li class="layui-nav-item" onclick="window.location.href='./mainpage.html'">
                         <a class="" href="javascript:;"><i class="layui-icon layui-icon-return"></i>&nbsp;返回</a>
                     </li>
+                    <li class="layui-nav-item" onclick="edit_survey()">
+                        <a class="" href="javascript:;">编辑</a>
+                    </li>
+                    <li class="layui-nav-item" onclick="preview_survey()">
+                        <a class="" href="javascript:;">预览</a>
+                    </li>
+                    <button class="layui-btn" style="width: 80%; margin: 10px 10% 10px 10%;" onclick="window.location.href='./createsurvey.html'">
+                        <i class="layui-icon layui-icon-ok"></i>生成问卷
+                    </button>
                 </ul>
             </div>
         </div>
 
         <div class="layui-body">
             <!-- 内容主体区域 -->
-            <iframe id="contentFrame" src="./surveylist.html" style="width: 100%; border: none;"></iframe>
+            <iframe id="contentFrame" src="./editsurvey.html" style="width: 100%; border: none;"></iframe>
         </div>
 
         <div id="footer" class="layui-footer">
@@ -64,14 +73,22 @@
     </script>
     <script>
         window.onload = function () {
-            $("#contentFrame").attr("height", window.innerHeight - $("#header").height() - $("#footer").height());
+            $("#contentFrame").attr("height", window.innerHeight - $("#header").height() - $("#footer").height() - 4);
             // frameHeight = window.innerHeight - headerHeight - footerHeight;
         }
 
         window.onresize = function () {
-            $("#contentFrame").attr("height", window.innerHeight - $("#header").height() - $("#footer").height());
+            $("#contentFrame").attr("height", window.innerHeight - $("#header").height() - $("#footer").height() - 4);
             // frameHeight = window.innerHeight - headerHeight - footerHeight;
         }
+
+        function preview_survey() {
+            $("#contentFrame").attr("src", "./viewsurvey.html?action=view");
+        }
+
+        function edit_survey() {
+            $("#contentFrame").attr("src", "./editsurvey.html");
+        } 
     </script>
 </body>
 
