@@ -32,17 +32,18 @@
         <div class="layui-side layui-bg-black">
             <div class="layui-side-scroll">
                 <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
-                <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                <ul class="layui-nav layui-nav-tree" lay-filter="menu">
                     <li class="layui-nav-item" onclick="window.location.href='./mainpage.html'">
                         <a class="" href="javascript:;"><i class="layui-icon layui-icon-return"></i>&nbsp;返回</a>
                     </li>
-                    <li class="layui-nav-item" onclick="edit_survey()">
+                    <li id="menu_edit" class="layui-nav-item layui-this" onclick="edit_survey()">
                         <a class="" href="javascript:;">编辑</a>
                     </li>
-                    <li class="layui-nav-item" onclick="preview_survey()">
+                    <li id="menu_preview" class="layui-nav-item" onclick="preview_survey()">
                         <a class="" href="javascript:;">预览</a>
                     </li>
-                    <button class="layui-btn" style="width: 80%; margin: 10px 10% 10px 10%;" onclick="window.location.href='./createsurvey.html'">
+                    <button class="layui-btn" style="width: 80%; margin: 10px 10% 10px 10%;"
+                        onclick="generate_survey()">
                         <i class="layui-icon layui-icon-ok"></i>生成问卷
                     </button>
                 </ul>
@@ -61,7 +62,7 @@
 
     </div>
 
-    <script src="./jquery-3.6.0.min.js"></script>
+    <!-- <script src="./jquery-3.6.0.min.js"></script> -->
     <script src="./layui/layui.js"></script>
     <script>
         //注意：导航 依赖 element 模块，否则无法进行功能性操作
@@ -70,9 +71,12 @@
 
             //…
         });
-    </script>
+
+        </script>
     <script>
+        var $ = null;
         window.onload = function () {
+            $ = layui.$;
             $("#contentFrame").attr("height", window.innerHeight - $("#header").height() - $("#footer").height() - 4);
             // frameHeight = window.innerHeight - headerHeight - footerHeight;
         }
@@ -101,7 +105,17 @@
 
         function edit_survey() {
             $("#contentFrame").attr("src", "./editsurvey.html");
-        } 
+        }
+
+        function generate_survey() {
+            contentFrame.onload = function () {
+                $("#contentFrame")[0].contentWindow.document.getElementById("btn_submit").click();
+                contentFrame.onload = null;
+            }
+            $("#menu_edit").click();
+            $("#menu_edit").addClass('layui-this');
+            $("#menu_preview").removeClass("layui-this");
+        }
     </script>
 </body>
 

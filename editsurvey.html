@@ -11,126 +11,128 @@
 
 <body style="background-color:#F0F0F0;">
     <script id="demo" type="text/html">
-        <input class="layui-input" type="text" name="title" placeholder="请输入文字" value="{{ d.title }}" autocomplete="off" 
-            onchange="update_text('title', value)"
-            style="margin: 0 auto; max-width: 500px; margin-top: 20px; height: 60px; font-size: 200%;">
-        <form class="layui-form" action="" style="margin-top: 20px; margin-right: 50px; margin-left: 50px">
-        <ul>
-            {{#  var count = 0; }}
-            {{#  layui.each(d.qlist, function(index, qitem){ }}
-            <li>
-                <div class="layui-card">
-                    <div class="layui-card-header">问题{{ count + 1 }}</div>
-                    <div class="layui-card-body">
-                        <div class="layui-form-item">
-                            <label class="layui-form-label">问题类型</label>
-                            <div class="layui-input-block">
-                              <select lay-filter="qtype" name="qtype_{{ count }}">
-                                {{# if (qitem.type == 0) { }}
-                                        <option value="0" selected>单选题</option>
-                                        <option value="1">多选题</option>
-                                        <option value="2">填空题</option>
-                                {{# } else if (qitem.type == 1) { }}
-                                        <option value="0">单选题</option>
-                                        <option value="1" selected>多选题</option>
-                                        <option value="2">填空题</option>
-                                {{# } else if (qitem.type == 2) { }}
-                                        <option value="0">单选题</option>
-                                        <option value="1">多选题</option>
-                                        <option value="2" selected>填空题</option>
-                                {{# }  }}
-                              </select>
-                            </div>
-                        </div>
-                        <div class="layui-form-item">
-                            <label class="layui-form-label">是否选答</label>
-                            <div class="layui-input-block">
-                                {{#   if (qitem.nullable == 1) {  }}
-                                <input type="checkbox" checked lay-filter="nullable" lay-skin="primary" name="optiontype_{{ count }}_{{ optioncount }}" qid="{{ count }}">
-                                {{#   } else {  }}
-                                <input type="checkbox" lay-filter="nullable" lay-skin="primary" name="optiontype_{{ count }}_{{ optioncount }}" qid="{{ count }}" oid="{{ optioncount }}">
-                                {{#   }       }}
-                            </div>
-                        </div>
-                        <div class="layui-form-item">
-                            <label class="layui-form-label">问题内容</label>
-                            <div class="layui-input-block">
-                                <input class="layui-input" type="text" name="qcontent_{{ count }}" placeholder="请输入文字" value="{{ qitem.qcontent }}" autocomplete="off"
-                                    onchange="update_textq({{ count }}, 'qcontent', value)">
-                            </div>
-                        </div>
-                        {{# if (qitem.type != 2) { }}
-                        <div class="layui-form-item" id="optionbox_{{ count }}">
-                            {{#  var optioncount = 0; }}
-                            {{#  layui.each(qitem.qoptions, function(index, qoptionitem){ }}
+        <form id="survey_form" class="layui-form" action="" style="margin-top: 20px; margin-right: 50px; margin-left: 50px">
+            <input class="layui-input" type="text" name="title" placeholder="请输入文字" value="{{ d.title }}" autocomplete="off" 
+                lay-verify="required" onchange="update_text('title', value)"
+                style="margin: 0 auto; max-width: 500px; margin-top: 20px; height: 60px; font-size: 200%;">
+            <button id="btn_submit" style="visibility: collapse;" class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+            <ul>
+                {{#  var count = 0; }}
+                {{#  layui.each(d.qlist, function(index, qitem){ }}
+                <li>
+                    <div class="layui-card">
+                        <div class="layui-card-header">问题{{ count + 1 }}</div>
+                        <div class="layui-card-body">
                             <div class="layui-form-item">
-                                <div class="layui-inline">
-                                    <label class="layui-form-label">选项{{ optioncount+1 }}</label>
-                                    <div class="layui-input-inline" style="width: 300px;">
-                                        <input class="layui-input" type="text" name="option_{{ count }}_{{ optioncount }}" placeholder="请输入文字" value="{{ qoptionitem.ocontent }}"
-                                            onchange="update_textqo({{ count }}, {{ optioncount }}, 'ocontent', value)" style="width: 100%;">
-                                    </div>
+                                <label class="layui-form-label">问题类型</label>
+                                <div class="layui-input-block">
+                                <select lay-filter="qtype" name="qtype_{{ count }}">
+                                    {{# if (qitem.type == 0) { }}
+                                            <option value="0" selected>单选题</option>
+                                            <option value="1">多选题</option>
+                                            <option value="2">填空题</option>
+                                    {{# } else if (qitem.type == 1) { }}
+                                            <option value="0">单选题</option>
+                                            <option value="1" selected>多选题</option>
+                                            <option value="2">填空题</option>
+                                    {{# } else if (qitem.type == 2) { }}
+                                            <option value="0">单选题</option>
+                                            <option value="1">多选题</option>
+                                            <option value="2" selected>填空题</option>
+                                    {{# }  }}
+                                </select>
                                 </div>
-                                <div class="layui-inline">
-                                    <label class="layui-form-label">受访者填写</label>
-                                    <div class="layui-input-inline" style="width: 80px;">
-                                        {{#   if (qoptionitem.type == 1) {  }}
-                                        <input type="checkbox" checked lay-filter="optiontype" lay-skin="primary" name="optiontype_{{ count }}_{{ optioncount }}" qid="{{ count }}" oid="{{ optioncount }}">
-                                        {{#   } else {  }}
-                                        <input type="checkbox" lay-filter="optiontype" lay-skin="primary" name="optiontype_{{ count }}_{{ optioncount }}" qid="{{ count }}" oid="{{ optioncount }}">
-                                        {{#   }       }}
-                                    </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">是否选答</label>
+                                <div class="layui-input-block">
+                                    {{#   if (qitem.nullable == 1) {  }}
+                                    <input type="checkbox" checked lay-filter="nullable" lay-skin="primary" name="optiontype_{{ count }}_{{ optioncount }}" qid="{{ count }}">
+                                    {{#   } else {  }}
+                                    <input type="checkbox" lay-filter="nullable" lay-skin="primary" name="optiontype_{{ count }}_{{ optioncount }}" qid="{{ count }}" oid="{{ optioncount }}">
+                                    {{#   }       }}
                                 </div>
-                                <div class="layui-inline">
-                                    <div class="layui-input-inline" style="width: 100px;">
-                                        <div class="layui-btn-group">
-                                            <button type="button" onclick="insert_option({{ count }}, {{ optioncount+1 }})" class="layui-btn layui-btn-primary layui-btn-sm">
-                                                <i class="layui-icon">&#xe654;</i>
-                                            </button>
-                                            {{#    if (qitem.qoptions.length >　1) {   }}
-                                            <button type="button" onclick="del_option({{ count }}, {{ optioncount }})" class="layui-btn layui-btn-primary layui-btn-sm">
-                                                <i class="layui-icon">&#xe640;</i>
-                                            </button>
-                                            {{#    }    }}
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">问题内容</label>
+                                <div class="layui-input-block">
+                                    <input class="layui-input" type="text" name="qcontent_{{ count }}" placeholder="请输入文字" value="{{ qitem.qcontent }}" autocomplete="off"
+                                        lay-verify="required" onchange="update_textq({{ count }}, 'qcontent', value)">
+                                </div>
+                            </div>
+                            {{# if (qitem.type != 2) { }}
+                            <div class="layui-form-item" id="optionbox_{{ count }}">
+                                {{#  var optioncount = 0; }}
+                                {{#  layui.each(qitem.qoptions, function(index, qoptionitem){ }}
+                                <div class="layui-form-item">
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label">选项{{ optioncount+1 }}</label>
+                                        <div class="layui-input-inline" style="width: 300px;">
+                                            <input class="layui-input" type="text" name="option_{{ count }}_{{ optioncount }}" placeholder="请输入文字" value="{{ qoptionitem.ocontent }}"
+                                                lay-verify="required" onchange="update_textqo({{ count }}, {{ optioncount }}, 'ocontent', value)" style="width: 100%;">
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <label class="layui-form-label">受访者填写</label>
+                                        <div class="layui-input-inline" style="width: 80px;">
+                                            {{#   if (qoptionitem.type == 1) {  }}
+                                            <input type="checkbox" checked lay-filter="optiontype" lay-skin="primary" name="optiontype_{{ count }}_{{ optioncount }}" qid="{{ count }}" oid="{{ optioncount }}">
+                                            {{#   } else {  }}
+                                            <input type="checkbox" lay-filter="optiontype" lay-skin="primary" name="optiontype_{{ count }}_{{ optioncount }}" qid="{{ count }}" oid="{{ optioncount }}">
+                                            {{#   }       }}
+                                        </div>
+                                    </div>
+                                    <div class="layui-inline">
+                                        <div class="layui-input-inline" style="width: 100px;">
+                                            <div class="layui-btn-group">
+                                                <button type="button" onclick="insert_option({{ count }}, {{ optioncount+1 }})" class="layui-btn layui-btn-primary layui-btn-sm">
+                                                    <i class="layui-icon">&#xe654;</i>
+                                                </button>
+                                                {{#    if (qitem.qoptions.length >　1) {   }}
+                                                <button type="button" onclick="del_option({{ count }}, {{ optioncount }})" class="layui-btn layui-btn-primary layui-btn-sm">
+                                                    <i class="layui-icon">&#xe640;</i>
+                                                </button>
+                                                {{#    }    }}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+                                {{#  optioncount += 1; }); }}
                             </div>
-                            {{#  optioncount += 1; }); }}
+                            {{# }        }}
                         </div>
-                        {{# }        }}
                     </div>
-                </div>
-                <div class="layui-btn-group">
-                    <button type="button" id="btn_add_question_{{ count }}" onclick="insert_question({{ count+1 }})" class="layui-btn layui-btn-sm">
-                      <i class="layui-icon">&#xe654;</i>
-                    </button>
-                    {{# if (d.qlist.length > 1) { }}
-                    <button type="button" id="btn_del_question_{{ count }}" onclick="del_question({{ count }})" class="layui-btn layui-btn-sm">
-                      <i class="layui-icon">&#xe640;</i>
-                    </button>
-                    {{# }    }}
-                </div>
-            </li>
-            <br>
-            <br>
-            {{#  count += 1;   }}
-            {{#  }); }}
-            {{#  if(d.qlist.count === 0){ }}
-            无数据
-            {{#  } }} 
-        </ul>
+                    <div class="layui-btn-group">
+                        <button type="button" id="btn_add_question_{{ count }}" onclick="insert_question({{ count+1 }})" class="layui-btn layui-btn-sm">
+                        <i class="layui-icon">&#xe654;</i>
+                        </button>
+                        {{# if (d.qlist.length > 1) { }}
+                        <button type="button" id="btn_del_question_{{ count }}" onclick="del_question({{ count }})" class="layui-btn layui-btn-sm">
+                        <i class="layui-icon">&#xe640;</i>
+                        </button>
+                        {{# }    }}
+                    </div>
+                </li>
+                <br>
+                <br>
+                {{#  count += 1;   }}
+                {{#  }); }}
+                {{#  if(d.qlist.count === 0){ }}
+                无数据
+                {{#  } }} 
+            </ul>
         </form>
     </script>
 
     <div id="view"></div>
 
-    <script src="./jquery-3.6.0.min.js"></script>
     <script src="./layui/layui.js"></script>
     <script src="./app.js"></script>
     <script>
-        var formdata = null;
+        var $ = null
+            , formdata = null;
         window.onload = function () {
+            $ = layui.$;
             formdata = parent.formdata;
             if (formdata == null) {
                 formdata = { //数据
@@ -205,6 +207,10 @@
                     default:
                         break;
                 }
+            });
+
+            form.on("submit", function () {
+                return false;
             });
         });
         layui.use('laytpl', function () {
