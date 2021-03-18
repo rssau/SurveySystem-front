@@ -124,8 +124,7 @@
           ]
         }
       }
-      var url = window.location.href;
-      var action = url.getValue('action');
+      var action = getArg('action');
       rerender();
       if (action != null && action == "view") {
         var form = layui.form;
@@ -205,17 +204,16 @@
       var layer = layui.layer;
 
     });
-
     function rerender() {
-            var laytpl = layui.laytpl;
-            var getTpl = demo.innerHTML
-                , view = document.getElementById('view');
-            laytpl(getTpl).render(data, function (html) {
-                view.innerHTML = html;
-            });
-            var form = layui.form;
-            form.render();
-        }
+      var laytpl = layui.laytpl;
+      var getTpl = demo.innerHTML
+        , view = document.getElementById('view');
+      laytpl(getTpl).render(data, function (html) {
+        view.innerHTML = html;
+      });
+      var form = layui.form;
+      form.render();
+    }
   </script>
 
 </body>

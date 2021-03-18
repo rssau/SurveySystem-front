@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./layui/css/layui.css">
+    <title>问卷管理系统</title>
+</head>
+
+<body>
+    <div id="container" style="position: fixed; overflow: hidden; z-index: -1;">
+        <div id="bg"
+            style="position: relative; background: url('images/bg.jpg') no-repeat; background-size: cover; filter: blur(30px); left:-40px; top: -30px;">
+        </div>
+    </div>
+    <div class="layui-layout layui-layout-admin">
+        <div id="header" class="layui-header">
+            <div class="layui-logo">问卷管理系统</div>
+        </div>
+    </div>
+    <h1 style="text-align: center; margin-top: 10%; color: white; font-size: 50px; text-shadow: 0px 0px 10px #222222;">小🐎问卷</h1>
+
+    <script id="loginbox" type="text/html">
+        <form class="layui-form" action="./mainpage.html" style="margin-top: 10%; margin-left: 20; margin-right: 20%">
+            <div class="layui-form-item">
+                <label class="layui-form-label">账号</label>
+                <div class="layui-input-block">
+                    <input type="text" name="title" lay-verify="required" placeholder="请输入账号" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">密码</label>
+                <div class="layui-input-block">
+                    <input type="password" name="password" lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit>登录</button>
+                    <button lay-filter="signup" type="button" class="layui-btn layui-btn-primary">注册</button>
+                </div>
+            </div>
+        </form>
+    </script>
+
+    <script src="./jquery-3.6.0.min.js"></script>
+    <script src="./layui/layui.js"></script>
+    <script>
+        window.onload = function () {
+            $("#container").height(window.innerHeight);
+            $("#container").width(window.innerWidth);
+            $("#bg").height(window.innerHeight + 100);
+            $("#bg").width(window.innerWidth + 100);
+        }
+        window.onresize = function () {
+            $("#container").height(window.innerHeight);
+            $("#container").width(window.innerWidth);
+            $("#bg").height(window.innerHeight + 100);
+            $("#bg").width(window.innerWidth + 100);
+        }
+        layui.use('layer', function () {
+            var layer = layui.layer;
+            //页面层
+            layer.open({
+                type: 1,
+                skin: 'layui-layer',
+                title: false,
+                closeBtn: 0,
+                offset: '40%',
+                area: ['420px', '270px'], //宽高
+                shade: 0,
+                resize: false,
+                anim: -1,
+                fixed: true,
+                content: $("#loginbox")[0].innerHTML
+            });
+        });
+        layui.use('element', function () {
+            var element = layui.element;
+        });
+        layui.use('form', function() {
+            var form = layui.form;
+        });
+    </script>
+</body>
+
+</html>
