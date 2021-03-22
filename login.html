@@ -39,7 +39,7 @@
             <div class="layui-form-item">
                 <div class="layui-input-block">
                     <button class="layui-btn" lay-submit>登录</button>
-                    <button lay-filter="signup" type="button" class="layui-btn layui-btn-primary">注册</button>
+                    <button lay-filter="signup" type="button" class="layui-btn layui-btn-primary" onclick="window.location.href='./signup.html';">注册</button>
                 </div>
             </div>
         </form>
@@ -63,19 +63,22 @@
         layui.use('layer', function () {
             var layer = layui.layer;
             //页面层
-            layer.open({
-                type: 1,
-                skin: 'layui-layer',
-                title: false,
-                closeBtn: 0,
-                offset: '40%',
-                area: ['420px', '270px'], //宽高
-                shade: 0,
-                resize: false,
-                anim: -1,
-                fixed: true,
-                content: $("#loginbox")[0].innerHTML
-            });
+            layer.ready(function () {
+                    layer.open({
+                        type: 1,
+                        skin: 'layui-layer',
+                        title: false,
+                        closeBtn: 0,
+                        offset: '40%',
+                        area: ['420px', '270px'], //宽高
+                        shade: 0,
+                        resize: false,
+                        anim: -1,
+                        fixed: true,
+                        content: $("#loginbox")[0].innerHTML
+                    });
+                }
+            );
         });
         layui.use('element', function () {
             var element = layui.element;
